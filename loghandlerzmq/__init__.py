@@ -236,7 +236,9 @@ class PUSHHandler(logging.Handler):
             return
 
         try:
-            self.socket.send(bmsg, flags=zmq.DONTWAIT)
+            self.socket.send_multipart(
+                [record.levelname.encode(), bmsg], flags=zmq.DONTWAIT
+            )
         except zmq.error.Again:
             # Raised if the SNDHWM is reached.
             self.handleError(record)
